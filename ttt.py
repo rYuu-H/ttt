@@ -44,7 +44,8 @@ class game():
         self.end=False
         self.winner=""
         drawboard(self)
- 
+ //hi
+
 def move(game,x,y):
     if game.board[x-1][y-1]==0:
         game.board[x-1][y-1]=game.turn    
