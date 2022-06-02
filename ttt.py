@@ -1,16 +1,25 @@
 import turtle
 import random
+import asyncio
+
 tur = turtle.Turtle()
 tur.color('black')
 tur.speed(0)
 tur.hideturtle()
 tur.up()
 def drawboard(game):
+    tur.color('black')
+    tur.width(1)
     for i in range(game.y-1):
         drawline([-game.size*game.x/2,game.size*game.y/2-(i+1)*game.size],[game.size*game.x/2,game.size*game.y/2-(i+1)*game.size])
     for i in range(game.x-1):
         drawline([game.size*game.x/2-(i+1)*game.size,-game.size*game.y/2],[game.size*game.x/2-(i+1)*game.size,game.size*game.y/2])
-    
+
+def getlocation(game,x,y):
+    x=x+1
+    y=y+1
+    return [-game.x*game.size/2-game.size/2+game.size*(y),game.y*game.size/2-game.size*0.5-game.size*(x-1)]
+
 def drawline(a,b):
     tur.goto(a)
     tur.down()
@@ -45,7 +54,7 @@ class game():
         self.player2="x"
         self.turn="o"
         self.end=False
-        self.connect = 5
+        self.connect = 3
         self.winner=""
         drawboard(self)
  
@@ -84,6 +93,9 @@ def check(game,x,y):
             t=t
         if connected >= game.connect:
             print(connected)
+            tur.color("purple")
+            tur.width(15)
+            drawline(getlocation(game,x-1+i[0]*(t-1),y-1+i[1]*(t-1)),getlocation(game,x-1+ i[0]*(t-connected) ,y-1+ i[1]*(t-connected)) )
             return True  
         coun=coun+1
         
@@ -101,20 +113,24 @@ def ranbot(game,turn):
     print([botx,boty])
 
 
+async def main():
+    game1 = game(5,5)
+    
+    while game1.end == False:
+        # i=input()
+        # x = int(i.split()[0])
+        # y = int(i.split()[1])
+        # move(game1,x,y)
+        ranbot(game1,game1.turn)
+    while game1.end == False:
+        # i=input()
+        # x = int(i.split()[0])
+        # y = int(i.split()[1])
+        # move(game1,x,y)
+        ranbot(game1,game1.turn)
+    print(game1.winner," win")
+    await asyncio.sleep(2)
+    tur.clear()
 
-game1 = game(10,10)
- 
-while game1.end == False:
-    # i=input()
-    # x = int(i.split()[0])
-    # y = int(i.split()[1])
-    # move(game1,x,y)
-    ranbot(game1,game1.turn)
-while game1.end == False:
-    # i=input()
-    # x = int(i.split()[0])
-    # y = int(i.split()[1])
-    # move(game1,x,y)
-    ranbot(game1,game1.turn)
-print(game1.winner," win")
-input()
+while True:
+    asyncio.run(main())
