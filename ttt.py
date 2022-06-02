@@ -2,6 +2,8 @@ import turtle
 import random
 import asyncio
 
+
+
 tur = turtle.Turtle()
 tur.color('black')
 tur.speed(0)
@@ -65,7 +67,7 @@ def move(game,x,y):
         game.end = check(game,x,y)
         if game.end == True:
             game.winner=game.turn
-            print([x,y])
+            # print([x,y])
         if game.turn=="o":
             game.turn="x"
         else:
@@ -92,7 +94,7 @@ def check(game,x,y):
         except:
             t=t
         if connected >= game.connect:
-            print(connected)
+            # print(connected)
             tur.color("purple")
             tur.width(15)
             drawline(getlocation(game,x-1+i[0]*(t-1),y-1+i[1]*(t-1)),getlocation(game,x-1+ i[0]*(t-connected) ,y-1+ i[1]*(t-connected)) )
@@ -101,7 +103,7 @@ def check(game,x,y):
         
         if coun == 2:
             coun = 0
-            print(connected)
+            # print(connected)
             connected=1
     return False  
 
@@ -110,12 +112,12 @@ def ranbot(game,turn):
         botx=random.randint(1,game.x)
         boty=random.randint(1,game.y)
         move(game,botx,boty)
-    print([botx,boty])
+    # print([botx,boty])
 
 
 async def main():
-    game1 = game(5,5)
-    
+    game1 = game(10,10)
+    game1.connect = 4
     while game1.end == False:
         # i=input()
         # x = int(i.split()[0])
@@ -128,9 +130,19 @@ async def main():
         # y = int(i.split()[1])
         # move(game1,x,y)
         ranbot(game1,game1.turn)
-    print(game1.winner," win")
+    # print(game1.winner," win")
+    if game1.winner== "o":
+        global owin
+        owin=owin+1
+    else:
+        global xwin
+        xwin=xwin+1
     await asyncio.sleep(2)
     tur.clear()
-
+owin = 0 
+xwin =0
 while True:
+
     asyncio.run(main())
+    
+    print("o had won ",owin," times, x had won ",xwin,"times.")
