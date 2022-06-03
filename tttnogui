@@ -1,0 +1,95 @@
+
+import random
+import asyncio
+
+class game():
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.size = 50
+        self.board = [["0" for a in range(y)] for b in range(x)]
+        self.player1="o"
+        self.player2="x"
+        self.turn="o"
+        self.end=False
+        self.connect = 3
+        self.winner=""
+        self.round=0
+
+def printboard(game):
+    for x in range(game.x):
+        print(game.board[x])
+
+def move(game,x,y):
+    if game.board[x-1][y-1]=="0":
+        game.board[x-1][y-1]=game.turn
+        game.end = check(game,x,y)
+        if game.end == True:
+            game.winner=game.turn
+        if game.turn=="o":
+            game.turn="x"
+        else:
+            game.turn="o"
+        
+def check(game,x,y):
+    top=[-1,0]
+    bot=[1,0]
+    left=[0,-1]
+    right=[0,1]
+    topleft=[-1,-1]
+    botright=[1,1]
+    topright=[-1,1]
+    botleft=[1,-1]
+    connected=1
+    coun=0
+    direct=[top,bot,left,right,topleft,botright,topright,botleft]
+    for i in direct:
+        t = 1
+        try:
+            while game.board[x-1+i[0]*t][y-1+i[1]*t] == game.turn and 0 <= x-1+i[0]*t<=game.x and 0 <= y-1+i[1]*t<=game.x  :
+                connected=connected+1
+                t=t+1
+        except:
+            t=t
+        coun=coun+1
+        
+        if coun == 2:
+            if connected >= game.connect:
+                return True  
+            coun = 0
+            connected=1
+    return False  
+
+def ranbot(game,turn):
+    while game.turn == turn:
+        botx=random.randint(1,game.x)
+        boty=random.randint(1,game.y)
+        move(game,botx,boty)
+
+
+async def main():
+    ranboard=[random.randint(4,10),random.randint(4,10)]
+    game1 = game(ranboard[0],ranboard[1])
+    game1.connect = 4
+    while game1.end == False and game1.round<game1.x*game1.y:
+        
+        if game1.turn=="o":
+            ranbot(game1,game1.turn)
+        elif game1.turn=="x":ranbot(game1,game1.turn)
+        game1.round=game1.round+1
+    
+    if game1.winner== "o":
+        global owin
+        owin=owin+1
+    elif game1.winner== "x":
+        global xwin
+        xwin=xwin+1
+    else:
+        global draw
+        draw=draw+1
+owin = 0 
+xwin = 0
+draw = 0
+while True:
+    asyncio.run(main())
+    print("o had won ",owin," times, x had won ",xwin,"times.",draw," draws!")
