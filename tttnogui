@@ -46,7 +46,7 @@ def check(game,x,y):
     for i in direct:
         t = 1
         try:
-            while game.board[x-1+i[0]*t][y-1+i[1]*t] == game.turn and 0 <= x-1+i[0]*t<=game.x and 0 <= y-1+i[1]*t<=game.x  :
+            while game.board[x-1+i[0]*t][y-1+i[1]*t] == game.turn and 0 <= x-1+i[0]*t<=game.x and 0 <= y-1+i[1]*t<=game.y:
                 connected=connected+1
                 t=t+1
         except:
